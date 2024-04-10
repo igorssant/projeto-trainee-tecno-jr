@@ -6,10 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  ValidationPipe,
 } from '@nestjs/common';
 import { PersonagemArmaduraService } from './personagem-armadura.service';
 import { CreatePersonagemArmaduraDto } from './dto/create-personagem-armadura.dto';
 import { UpdatePersonagemArmaduraDto } from './dto/update-personagem-armadura.dto';
+import { ArmadurasQueryDto } from './dto/armaduras-query.dto';
 
 @Controller('api/personagem/armadura')
 export class PersonagemArmaduraController {
@@ -26,43 +29,31 @@ export class PersonagemArmaduraController {
     );
   }
 
+  @Get('personagem-armadura/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.personagemArmaduraService.findOne(+id);
+  }
+
   @Get('personagem-armaduras')
-  async findAll() {
-    return await this.personagemArmaduraService.findAll();
-  }
-
-  @Get('personagem-armadura/:armaduraId/:personagemId')
-  async findOne(
-    @Param('armaduraId') armaduraId: string,
-    @Param('personagemId') personagemId: string,
+  async getByQuery(
+    @Query(new ValidationPipe()) armadurasQueryDto: ArmadurasQueryDto,
   ) {
-    return await this.personagemArmaduraService.findOne(
-      +armaduraId,
-      +personagemId,
-    );
+    return await this.personagemArmaduraService.findByQuery(armadurasQueryDto);
   }
 
-  @Patch('personagem-armadura/:armaduraId/:personagemId')
+  @Patch('personagem-armadura/:id')
   async update(
-    @Param('armaduraId') armaduraId: string,
-    @Param('personagemId') personagemId: string,
+    @Param('id') id: string,
     @Body() updatePersonagemArmaduraDto: UpdatePersonagemArmaduraDto,
   ) {
     return await this.personagemArmaduraService.update(
-      +armaduraId,
-      +personagemId,
+      +id,
       updatePersonagemArmaduraDto,
     );
   }
 
-  @Delete('personagem-armadura/:armaduraId/:personagemId')
-  async remove(
-    @Param('armaduraId') armaduraId: string,
-    @Param('personagemId') personagemId: string,
-  ) {
-    return await this.personagemArmaduraService.remove(
-      +armaduraId,
-      +personagemId,
-    );
+  @Delete('personagem-armadura/:id')
+  async remove(@Param('id') id: string) {
+    return await this.personagemArmaduraService.remove(+id);
   }
 }

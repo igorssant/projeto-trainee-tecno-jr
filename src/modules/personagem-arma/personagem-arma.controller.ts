@@ -8,7 +8,6 @@ import {
   Delete,
   Query,
   ValidationPipe,
-  NotFoundException,
 } from '@nestjs/common';
 import { PersonagemArmaService } from './personagem-arma.service';
 import { CreatePersonagemArmaDto } from './dto/create-personagem-arma.dto';
@@ -31,11 +30,7 @@ export class PersonagemArmaController {
 
   @Get('personagem-armas')
   async findByQuery(@Query(new ValidationPipe()) armasQueryDto: ArmasQueryDto) {
-    try {
-      return await this.personagemArmaService.findByQuery(armasQueryDto);
-    } catch (error) {
-      throw new NotFoundException('Falha ao retornar as armas.');
-    }
+    return await this.personagemArmaService.findByQuery(armasQueryDto);
   }
 
   @Patch('personagem-arma/:id')

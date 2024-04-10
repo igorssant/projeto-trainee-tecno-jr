@@ -31,7 +31,6 @@ export class PersonagemArmaService {
 
   async findByQuery(armasQueryDto: ArmasQueryDto) {
     const { armaId, personagemId } = armasQueryDto;
-
     let query = this.personagemArmaRepository.createQueryBuilder('pa');
 
     if (armaId) {
@@ -44,7 +43,11 @@ export class PersonagemArmaService {
       });
     }
 
-    return await query.getMany();
+    try {
+      return await query.getMany();
+    } catch (error) {
+      throw new NotFoundException('Falha ao retornar as armas.');
+    }
   }
 
   async update(id: number, updatePersonagemArmaDto: UpdatePersonagemArmaDto) {
