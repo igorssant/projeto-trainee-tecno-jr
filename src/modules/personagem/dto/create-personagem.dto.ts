@@ -1,5 +1,11 @@
 import { Transform } from 'class-transformer';
-import { IsEnum, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Classe } from 'src/common/enum/Classe.enum';
 import { Origens } from 'src/common/enum/Origens.enum';
 import { Racas } from 'src/common/enum/Racas.enum';
@@ -25,6 +31,7 @@ export class CreatePersonagemDto {
   origem: string;
 
   @IsString({ message: 'Este campo deve ser composto por um texto.' })
+  @IsOptional()
   deus: string;
 
   @IsInt({ message: 'Este campo deve receber um número inteiro' })

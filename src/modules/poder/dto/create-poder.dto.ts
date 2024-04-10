@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreatePoderDto {
   @IsString({ message: 'Este campo deve ser composto por um texto.' })
@@ -28,5 +28,6 @@ export class CreatePoderDto {
   alvo: string;
 
   @IsString({ message: 'Este campo deve ser composto por um texto.' })
+  @IsOptional()
   duracao: string = 'Instantâneo';
 }

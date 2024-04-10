@@ -4,6 +4,7 @@ import { UpdatePersonagemArmaDto } from './dto/update-personagem-arma.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PersonagemArma } from './entities/personagem-arma.entity';
 import { Repository } from 'typeorm';
+import { ArmasQueryDto } from './dto/armas-query.dto';
 
 @Injectable()
 export class PersonagemArmaService {
@@ -20,35 +21,46 @@ export class PersonagemArmaService {
     return await this.personagemArmaRepository.find();
   }
 
-  async findOne(armaId: number, personagemId: number) {
+  async findOne(id: number) {
     try {
-      return await this.personagemArmaRepository.findOneByOrFail({
-        armaId,
-        personagemId,
-      });
+      return await this.personagemArmaRepository.findOneByOrFail({ id });
     } catch (error) {
       throw new NotFoundException('Relação Jogador-Arma não encontrada.');
     }
   }
 
-  async update(
-    armaId: number,
-    personagemId: number,
-    updatePersonagemArmaDto: UpdatePersonagemArmaDto,
-  ) {
+  async findByQuery(armasQueryDto: ArmasQueryDto) {
+    const { armaId, personagemId } = armasQueryDto;
+
+    let query = this.personagemArmaRepository.createQueryBuilder('pa');
+
+    if (armaId) {
+      query = query.andWhere('pa.armaId = :armaId', { armaId });
+    }
+
+    if (personagemId) {
+      query = query.andWhere('pa.personagemId = :personagemId', {
+        personagemId,
+      });
+    }
+
+    return await query.getMany();
+  }
+
+  async update(id: number, updatePersonagemArmaDto: UpdatePersonagemArmaDto) {
     // VERIFICA SE O PERSONAGEM REALMENTE TEM TAL ARMA
     // SE NÃO POSSUIR, ENTÃO O PROGRAMA ABORTA A EXECUÇÃO
-    await this.findOne(armaId, personagemId);
+    await this.findOne(id);
     return await this.personagemArmaRepository.update(
-      [armaId, personagemId],
+      id,
       updatePersonagemArmaDto,
     );
   }
 
-  async remove(armaId: number, personagemId: number) {
+  async remove(id: number) {
     // VERIFICA SE O PERSONAGEM REALMENTE TEM TAL ARMA
     // SE NÃO POSSUIR, ENTÃO O PROGRAMA ABORTA A EXECUÇÃO
-    await this.findOne(armaId, personagemId);
-    return await this.personagemArmaRepository.delete([armaId, personagemId]);
+    await this.findOne(id);
+    return await this.personagemArmaRepository.delete(id);
   }
 }

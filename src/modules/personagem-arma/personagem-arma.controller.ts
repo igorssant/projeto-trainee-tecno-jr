@@ -6,10 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  ValidationPipe,
+  NotFoundException,
 } from '@nestjs/common';
 import { PersonagemArmaService } from './personagem-arma.service';
 import { CreatePersonagemArmaDto } from './dto/create-personagem-arma.dto';
 import { UpdatePersonagemArmaDto } from './dto/update-personagem-arma.dto';
+import { ArmasQueryDto } from './dto/armas-query.dto';
 
 @Controller('api/personagem/arma')
 export class PersonagemArmaController {
@@ -20,37 +24,33 @@ export class PersonagemArmaController {
     return await this.personagemArmaService.create(createPersonagemArmaDto);
   }
 
+  @Get('personagem-arma/:id')
+  async findOne(@Param('armaId') id: string) {
+    return this.personagemArmaService.findOne(+id);
+  }
+
   @Get('personagem-armas')
-  async findAll() {
-    return await this.personagemArmaService.findAll();
+  async findByQuery(@Query(new ValidationPipe()) armasQueryDto: ArmasQueryDto) {
+    try {
+      return await this.personagemArmaService.findByQuery(armasQueryDto);
+    } catch (error) {
+      throw new NotFoundException('Falha ao retornar as armas.');
+    }
   }
 
-  @Get('personagem-arma/:armaId&:personagemId')
-  async findOne(
-    @Param('armaId') armaId: string,
-    @Param('personagemId') personagemId: string,
-  ) {
-    return this.personagemArmaService.findOne(+armaId, +personagemId);
-  }
-
-  @Patch('personagem-arma/:armaId/:personagemId')
+  @Patch('personagem-arma/:id')
   async update(
-    @Param('armaId') armaId: string,
-    @Param('personagemId') personagemId: string,
+    @Param('id') id: string,
     @Body() updatePersonagemArmaDto: UpdatePersonagemArmaDto,
   ) {
     return await this.personagemArmaService.update(
-      +armaId,
-      +personagemId,
+      +id,
       updatePersonagemArmaDto,
     );
   }
 
-  @Delete('personagem-arma/:armaId/:personagemId')
-  async remove(
-    @Param('armaId') armaId: string,
-    @Param('personagemId') personagemId: string,
-  ) {
-    return await this.personagemArmaService.remove(+armaId, +personagemId);
+  @Delete('personagem-arma/:id')
+  async remove(@Param('id') id: string) {
+    return await this.personagemArmaService.remove(+id);
   }
 }

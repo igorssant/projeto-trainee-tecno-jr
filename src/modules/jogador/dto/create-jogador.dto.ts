@@ -2,6 +2,7 @@ import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
+  IsOptional,
   IsString,
   IsStrongPassword,
 } from 'class-validator';
@@ -23,5 +24,6 @@ export class CreateJogadorDto {
 
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
+  @IsOptional()
   mestre: boolean = false;
 }

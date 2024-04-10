@@ -1,5 +1,11 @@
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateArmaDto {
   @IsString({ message: 'Este campo deve ser composto por um texto.' })
@@ -36,9 +42,11 @@ export class CreateArmaDto {
 
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
+  @IsOptional()
   itemMagico: boolean = false;
 
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
+  @IsOptional()
   estaEmpunhando: boolean = false;
 }

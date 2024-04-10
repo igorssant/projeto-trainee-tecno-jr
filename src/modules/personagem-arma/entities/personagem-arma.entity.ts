@@ -1,22 +1,22 @@
 import { Arma } from 'src/modules/arma/entities/arma.entity';
 import { Personagem } from 'src/modules/personagem/entities/personagem.entity';
 import {
+  Column,
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity({ name: 'tbl_personagem_arma', orderBy: { id: 'ASC' } })
 export class PersonagemArma {
-  @PrimaryGeneratedColumn({ name: 'per_arm_id', type: 'int' })
+  @PrimaryGeneratedColumn({ name: 'per_arma_id', type: 'int' })
   id: number;
 
-  @PrimaryColumn({ name: 'arma_id', nullable: false })
+  @Column({ name: 'per_arma_arma_id', type: 'int', nullable: false })
   armaId: number;
 
-  @PrimaryColumn({ name: 'per_id', nullable: false })
+  @Column({ name: 'per_arma_per_id', type: 'int', nullable: false })
   personagemId: number;
 
   @ManyToOne(() => Arma, (arma) => arma.personagemArma, { onDelete: 'CASCADE' })

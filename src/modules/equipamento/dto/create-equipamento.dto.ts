@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsString, IsNotEmpty, IsInt } from 'class-validator';
+import { IsString, IsNotEmpty, IsInt, IsOptional } from 'class-validator';
 
 export class CreateEquipamentoDto {
   @IsString({ message: 'Este campo deve ser composto por um texto.' })
@@ -22,5 +22,6 @@ export class CreateEquipamentoDto {
 
   @IsInt({ message: 'Este campo deve receber um número inteiro' })
   @Transform(({ value }) => parseInt(value, 10))
-  quantidade: number = 0;
+  @IsOptional()
+  quantidade: number = 1;
 }
