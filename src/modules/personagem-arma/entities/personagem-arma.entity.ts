@@ -1,9 +1,18 @@
 import { Arma } from 'src/modules/arma/entities/arma.entity';
 import { Personagem } from 'src/modules/personagem/entities/personagem.entity';
-import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity({ name: 'tbl_personagem_arma' })
+@Entity({ name: 'tbl_personagem_arma', orderBy: { id: 'ASC' } })
 export class PersonagemArma {
+  @PrimaryGeneratedColumn({ name: 'per_arm_id', type: 'int' })
+  id: number;
+
   @PrimaryColumn({ name: 'arma_id', nullable: false })
   armaId: number;
 
