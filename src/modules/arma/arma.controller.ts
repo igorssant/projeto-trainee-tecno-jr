@@ -1,34 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ArmaService } from './arma.service';
 import { CreateArmaDto } from './dto/create-arma.dto';
 import { UpdateArmaDto } from './dto/update-arma.dto';
 
-@Controller('arma')
+@Controller('api')
 export class ArmaController {
   constructor(private readonly armaService: ArmaService) {}
 
-  @Post()
-  create(@Body() createArmaDto: CreateArmaDto) {
-    return this.armaService.create(createArmaDto);
+  @Post('arma')
+  async create(@Body() createArmaDto: CreateArmaDto) {
+    return await this.armaService.create(createArmaDto);
   }
 
-  @Get()
-  findAll() {
-    return this.armaService.findAll();
+  @Get('armas')
+  async findAll() {
+    return await this.armaService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.armaService.findOne(+id);
+  @Get('arma/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.armaService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateArmaDto: UpdateArmaDto) {
-    return this.armaService.update(+id, updateArmaDto);
+  @Patch('arma/:id')
+  async update(@Param('id') id: string, @Body() updateArmaDto: UpdateArmaDto) {
+    return await this.armaService.update(+id, updateArmaDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.armaService.remove(+id);
+  @Delete('arma/:id')
+  async remove(@Param('id') id: string) {
+    return await this.armaService.remove(+id);
   }
 }

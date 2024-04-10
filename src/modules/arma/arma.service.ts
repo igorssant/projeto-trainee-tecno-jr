@@ -1,26 +1,51 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArmaDto } from './dto/create-arma.dto';
 import { UpdateArmaDto } from './dto/update-arma.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Arma } from './entities/arma.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ArmaService {
-  create(createArmaDto: CreateArmaDto) {
-    return 'This action adds a new arma';
+  constructor(
+    @InjectRepository(Arma)
+    private armaRepository: Repository<Arma>,
+  ) {}
+
+  async create(createArmaDto: CreateArmaDto) {
+    // VERIFICA SE A ARMA JÁ EXISTE
+    // SE JÁ EXISTIR NÃO SERÁ CADASTRADA NOVAMENTE
+    await this.findByNome(createArmaDto.nome);
+    return await this.armaRepository.save(createArmaDto);
   }
 
-  findAll() {
-    return `This action returns all arma`;
+  async findAll() {
+    return await this.armaRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} arma`;
+  async findOne(id: number) {
+    try {
+      return await this.armaRepository.findOneByOrFail({ id });
+    } catch (error) {
+      throw new NotFoundException('Arma não existe.');
+    }
   }
 
-  update(id: number, updateArmaDto: UpdateArmaDto) {
-    return `This action updates a #${id} arma`;
+  async update(id: number, updateArmaDto: UpdateArmaDto) {
+    return this.armaRepository.update(id, updateArmaDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} arma`;
+  async remove(id: number) {
+    // VERIFICA SE A ARMA EXISTE PELO id
+    // SE EXISTIR, EXCLUI. CASO CONTRARIO, GERA ERRO
+    await this.findOne(id);
+    return await this.armaRepository.delete(id);
+  }
+
+  async findByNome(nome: string) {
+    return await this.armaRepository.findOneOrFail({
+      where: { nome },
+      select: ['id', 'nome', 'descricao', 'dano', 'preco'],
+    });
   }
 }

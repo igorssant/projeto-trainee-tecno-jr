@@ -1,34 +1,45 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { MagiaService } from './magia.service';
 import { CreateMagiaDto } from './dto/create-magia.dto';
 import { UpdateMagiaDto } from './dto/update-magia.dto';
 
-@Controller('magia')
+@Controller('api')
 export class MagiaController {
   constructor(private readonly magiaService: MagiaService) {}
 
-  @Post()
-  create(@Body() createMagiaDto: CreateMagiaDto) {
-    return this.magiaService.create(createMagiaDto);
+  @Post('magia')
+  async create(@Body() createMagiaDto: CreateMagiaDto) {
+    return await this.magiaService.create(createMagiaDto);
   }
 
-  @Get()
-  findAll() {
-    return this.magiaService.findAll();
+  @Get('magias')
+  async findAll() {
+    return await this.magiaService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.magiaService.findOne(+id);
+  @Get('magia/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.magiaService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMagiaDto: UpdateMagiaDto) {
-    return this.magiaService.update(+id, updateMagiaDto);
+  @Patch('magia/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateMagiaDto: UpdateMagiaDto,
+  ) {
+    return await this.magiaService.update(+id, updateMagiaDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.magiaService.remove(+id);
+  @Delete('magia/:id')
+  async remove(@Param('id') id: string) {
+    return await this.magiaService.remove(+id);
   }
 }

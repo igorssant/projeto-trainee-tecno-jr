@@ -1,34 +1,45 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ArmaduraService } from './armadura.service';
 import { CreateArmaduraDto } from './dto/create-armadura.dto';
 import { UpdateArmaduraDto } from './dto/update-armadura.dto';
 
-@Controller('armadura')
+@Controller('api')
 export class ArmaduraController {
   constructor(private readonly armaduraService: ArmaduraService) {}
 
-  @Post()
-  create(@Body() createArmaduraDto: CreateArmaduraDto) {
-    return this.armaduraService.create(createArmaduraDto);
+  @Post('armadura')
+  async create(@Body() createArmaduraDto: CreateArmaduraDto) {
+    return await this.armaduraService.create(createArmaduraDto);
   }
 
-  @Get()
-  findAll() {
-    return this.armaduraService.findAll();
+  @Get('armaduras')
+  async findAll() {
+    return await this.armaduraService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.armaduraService.findOne(+id);
+  @Get('armadura/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.armaduraService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateArmaduraDto: UpdateArmaduraDto) {
-    return this.armaduraService.update(+id, updateArmaduraDto);
+  @Patch('armadura/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateArmaduraDto: UpdateArmaduraDto,
+  ) {
+    return await this.armaduraService.update(+id, updateArmaduraDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.armaduraService.remove(+id);
+  @Delete('armadura/:id')
+  async remove(@Param('id') id: string) {
+    return await this.armaduraService.remove(+id);
   }
 }

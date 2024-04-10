@@ -1,26 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEquipamentoDto } from './dto/create-equipamento.dto';
 import { UpdateEquipamentoDto } from './dto/update-equipamento.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Equipamento } from './entities/equipamento.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class EquipamentoService {
-  create(createEquipamentoDto: CreateEquipamentoDto) {
-    return 'This action adds a new equipamento';
+  constructor(
+    @InjectRepository(Equipamento)
+    private equipamentoRepository: Repository<Equipamento>,
+  ) {}
+
+  async create(createEquipamentoDto: CreateEquipamentoDto) {
+    return await this.equipamentoRepository.save(createEquipamentoDto);
   }
 
-  findAll() {
-    return `This action returns all equipamento`;
+  async findAll() {
+    return await this.equipamentoRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} equipamento`;
+  async findOne(id: number) {
+    try {
+      return await this.equipamentoRepository.findOneByOrFail({ id });
+    } catch (error) {
+      throw new NotFoundException('Equipamento não existe.');
+    }
   }
 
-  update(id: number, updateEquipamentoDto: UpdateEquipamentoDto) {
-    return `This action updates a #${id} equipamento`;
+  async update(id: number, updateEquipamentoDto: UpdateEquipamentoDto) {
+    return await this.equipamentoRepository.update(id, updateEquipamentoDto);
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} equipamento`;
   }
 }

@@ -1,26 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArmaduraDto } from './dto/create-armadura.dto';
 import { UpdateArmaduraDto } from './dto/update-armadura.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Armadura } from './entities/armadura.entity';
 
 @Injectable()
 export class ArmaduraService {
-  create(createArmaduraDto: CreateArmaduraDto) {
-    return 'This action adds a new armadura';
+  constructor(
+    @InjectRepository(Armadura)
+    private armaduraRepository: Repository<Armadura>,
+  ) {}
+
+  async create(createArmaduraDto: CreateArmaduraDto) {
+    // VERIFICA SE A ARMA JÁ EXISTE
+    // SE JÁ EXISTIR NÃO SERÁ CADASTRADA NOVAMENTE
+    await this.findByNome(createArmaduraDto.nome);
+    return await this.armaduraRepository.save(createArmaduraDto);
   }
 
-  findAll() {
-    return `This action returns all armadura`;
+  async findAll() {
+    return await this.armaduraRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} armadura`;
+  async findOne(id: number) {
+    try {
+      return await this.armaduraRepository.findOneByOrFail({ id });
+    } catch (error) {
+      throw new NotFoundException('Armadura não existe.');
+    }
   }
 
-  update(id: number, updateArmaduraDto: UpdateArmaduraDto) {
-    return `This action updates a #${id} armadura`;
+  async update(id: number, updateArmaduraDto: UpdateArmaduraDto) {
+    return await this.armaduraRepository.update(id, updateArmaduraDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} armadura`;
+  async remove(id: number) {
+    // VERIFICA SE A ARMADURA EXISTE PELO id
+    // SE EXISTIR, EXCLUI. CASO CONTRARIO, GERA ERRO
+    await this.findOne(id);
+    return await this.armaduraRepository.delete(id);
+  }
+
+  async findByNome(nome: string) {
+    return await this.armaduraRepository.findOneOrFail({
+      where: { nome },
+      select: [
+        'id',
+        'nome',
+        'preco',
+        'bonusClasseDeArmadura',
+        'penalidadePorArmadura',
+      ],
+    });
   }
 }

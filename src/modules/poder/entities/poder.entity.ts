@@ -40,5 +40,3 @@ export class Poder {
   )
   personagemPoder: PersonagemPoder[];
 }
-
-// https://youtu.be/dAy4TZXzZck?t=1028

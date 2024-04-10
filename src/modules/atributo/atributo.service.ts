@@ -1,26 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAtributoDto } from './dto/create-atributo.dto';
 import { UpdateAtributoDto } from './dto/update-atributo.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Atributo } from './entities/atributo.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AtributoService {
-  create(createAtributoDto: CreateAtributoDto) {
-    return 'This action adds a new atributo';
+  constructor(
+    @InjectRepository(Atributo)
+    private atributoRepository: Repository<Atributo>,
+  ) {}
+
+  async create(createAtributoDto: CreateAtributoDto) {
+    return await this.atributoRepository.save(createAtributoDto);
   }
 
-  findAll() {
-    return `This action returns all atributo`;
+  async findAll() {
+    return await this.atributoRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} atributo`;
+  async findOne(id: number) {
+    try {
+      return await this.atributoRepository.findOneByOrFail({ id });
+    } catch (error) {
+      throw new NotFoundException('Atributo não encontrado.');
+    }
   }
 
-  update(id: number, updateAtributoDto: UpdateAtributoDto) {
-    return `This action updates a #${id} atributo`;
+  async update(id: number, updateAtributoDto: UpdateAtributoDto) {
+    return await this.atributoRepository.update(id, updateAtributoDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} atributo`;
+  async remove(id: number) {
+    // VERIFICA SE O ATRIBUTO EXISTE PELO id
+    // SE EXISTIR, EXCLUI. CASO CONTRARIO, GERA ERRO
+    await this.findOne(id);
+    return await this.atributoRepository.delete(id);
   }
 }

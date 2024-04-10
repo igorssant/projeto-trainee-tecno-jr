@@ -13,7 +13,7 @@ export class Arma {
   descricao: string;
 
   @Column({ name: 'arma_dano', type: 'varchar', length: 50, nullable: false })
-  dano: number;
+  dano: string;
 
   @Column({ name: 'arma_bonus_atk', type: 'int', nullable: false, default: 0 })
   bonusAtaque: number;

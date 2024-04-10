@@ -1,0 +1,16 @@
+export enum Classe {
+  Arcanista = 'Arcanista',
+  Barbaro = 'Barbaro',
+  Bardo = 'Bardo',
+  Bucaneiro = 'Bucaneiro',
+  Cacador = 'Caçador',
+  Cavaleiro = 'Cavaleiro',
+  Clerigo = 'Clérigo',
+  Druida = 'Druida',
+  Guerreiro = 'Guerreiro',
+  Inventor = 'Inventor',
+  Ladino = 'Ladino',
+  Lutador = 'Lutador',
+  Nobre = 'Nobre',
+  Paladino = 'Paladino',
+}
