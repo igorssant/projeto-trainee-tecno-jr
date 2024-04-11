@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { EquipamentoService } from './equipamento.service';
 import { CreateEquipamentoDto } from './dto/create-equipamento.dto';
 import { UpdateEquipamentoDto } from './dto/update-equipamento.dto';
+import { AuthGuard } from 'src/common/guard/auth.guard';
 
 @Controller('equipamento')
+@UseGuards(AuthGuard)
 export class EquipamentoController {
   constructor(private readonly equipamentoService: EquipamentoService) {}
 

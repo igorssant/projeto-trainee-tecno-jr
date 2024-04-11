@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { AtributoService } from './atributo.service';
 import { CreateAtributoDto } from './dto/create-atributo.dto';
 import { UpdateAtributoDto } from './dto/update-atributo.dto';
+import { AuthGuard } from 'src/common/guard/auth.guard';
 
 @Controller('api')
+@UseGuards(AuthGuard)
 export class AtributoController {
   constructor(private readonly atributoService: AtributoService) {}
 

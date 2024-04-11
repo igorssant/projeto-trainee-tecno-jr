@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { PersonagemService } from './personagem.service';
 import { CreatePersonagemDto } from './dto/create-personagem.dto';
 import { UpdatePersonagemDto } from './dto/update-personagem.dto';
+import { AuthGuard } from 'src/common/guard/auth.guard';
 
 @Controller('api')
+@UseGuards(AuthGuard)
 export class PersonagemController {
   constructor(private readonly personagemService: PersonagemService) {}
 

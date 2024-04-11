@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { MagiaService } from './magia.service';
 import { CreateMagiaDto } from './dto/create-magia.dto';
 import { UpdateMagiaDto } from './dto/update-magia.dto';
+import { AuthGuard } from 'src/common/guard/auth.guard';
 
 @Controller('api')
+@UseGuards(AuthGuard)
 export class MagiaController {
   constructor(private readonly magiaService: MagiaService) {}
 

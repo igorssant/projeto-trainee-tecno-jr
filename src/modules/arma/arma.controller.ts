@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ArmaService } from './arma.service';
 import { CreateArmaDto } from './dto/create-arma.dto';
 import { UpdateArmaDto } from './dto/update-arma.dto';
+import { AuthGuard } from 'src/common/guard/auth.guard';
 
 @Controller('api')
+@UseGuards(AuthGuard)
 export class ArmaController {
   constructor(private readonly armaService: ArmaService) {}
 

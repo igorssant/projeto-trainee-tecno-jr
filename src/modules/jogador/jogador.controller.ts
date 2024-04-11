@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { JogadorService } from './jogador.service';
 import { CreateJogadorDto } from './dto/create-jogador.dto';
 import { UpdateJogadorDto } from './dto/update-jogador.dto';
+import { AuthGuard } from 'src/common/guard/auth.guard';
 
 @Controller('api')
+@UseGuards(AuthGuard)
 export class JogadorController {
   constructor(private readonly jogadorService: JogadorService) {}
 

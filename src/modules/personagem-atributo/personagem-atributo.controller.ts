@@ -8,13 +8,16 @@ import {
   Delete,
   Query,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { PersonagemAtributoService } from './personagem-atributo.service';
 import { CreatePersonagemAtributoDto } from './dto/create-personagem-atributo.dto';
 import { UpdatePersonagemAtributoDto } from './dto/update-personagem-atributo.dto';
 import { AtributosQueryDto } from './dto/atributos-query.dto';
+import { AuthGuard } from 'src/common/guard/auth.guard';
 
 @Controller('api/personagem')
+@UseGuards(AuthGuard)
 export class PersonagemAtributoController {
   constructor(
     private readonly personagemAtributoService: PersonagemAtributoService,

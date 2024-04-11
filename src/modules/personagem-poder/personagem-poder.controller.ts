@@ -8,13 +8,16 @@ import {
   Delete,
   Query,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { PersonagemPoderService } from './personagem-poder.service';
 import { CreatePersonagemPoderDto } from './dto/create-personagem-poder.dto';
 import { UpdatePersonagemPoderDto } from './dto/update-personagem-poder.dto';
 import { PoderesQueryDto } from './dto/poderes-query.dto';
+import { AuthGuard } from 'src/common/guard/auth.guard';
 
 @Controller('api/personagem')
+@UseGuards(AuthGuard)
 export class PersonagemPoderController {
   constructor(
     private readonly personagemPoderService: PersonagemPoderService,

@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { PoderService } from './poder.service';
 import { CreatePoderDto } from './dto/create-poder.dto';
 import { UpdatePoderDto } from './dto/update-poder.dto';
+import { AuthGuard } from 'src/common/guard/auth.guard';
 
 @Controller('api')
+@UseGuards(AuthGuard)
 export class PoderController {
   constructor(private readonly poderService: PoderService) {}
 
