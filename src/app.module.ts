@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { JogadorModule } from './modules/jogador/jogador.module';
 import { PersonagemModule } from './modules/personagem/personagem.module';
 import { AtributoModule } from './modules/atributo/atributo.module';
@@ -18,6 +18,7 @@ import { PersonagemPoderModule } from './modules/personagem-poder/personagem-pod
 import { PersonagemEquipamentoModule } from './modules/personagem-equipamento/personagem-equipamento.module';
 import { PersonagemArmaduraModule } from './modules/personagem-armadura/personagem-armadura.module';
 import { PersonagemArmaModule } from './modules/personagem-arma/personagem-arma.module';
+import { databaseConfig } from 'config/database.config';
 
 @Module({
   imports: [
@@ -26,18 +27,7 @@ import { PersonagemArmaModule } from './modules/personagem-arma/personagem-arma.
       envFilePath: '.env',
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
-        host: configService.get('DB_HOST'),
-        port: +configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
-        entities: [],
-        synchronize: true,
-      }),
-      inject: [ConfigService],
+      useFactory: () => databaseConfig,
     }),
     JogadorModule,
     PersonagemModule,
