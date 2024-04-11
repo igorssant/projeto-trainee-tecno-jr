@@ -1,34 +1,61 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  ValidationPipe,
+} from '@nestjs/common';
 import { PersonagemEquipamentoService } from './personagem-equipamento.service';
 import { CreatePersonagemEquipamentoDto } from './dto/create-personagem-equipamento.dto';
 import { UpdatePersonagemEquipamentoDto } from './dto/update-personagem-equipamento.dto';
+import { EquipamentosQueryDto } from './dto/equipamentos-query.dto';
 
-@Controller('personagem-equipamento')
+@Controller('api/personagem')
 export class PersonagemEquipamentoController {
-  constructor(private readonly personagemEquipamentoService: PersonagemEquipamentoService) {}
+  constructor(
+    private readonly personagemEquipamentoService: PersonagemEquipamentoService,
+  ) {}
 
-  @Post()
-  create(@Body() createPersonagemEquipamentoDto: CreatePersonagemEquipamentoDto) {
-    return this.personagemEquipamentoService.create(createPersonagemEquipamentoDto);
+  @Post('personagem-equipamento')
+  async create(
+    @Body() createPersonagemEquipamentoDto: CreatePersonagemEquipamentoDto,
+  ) {
+    return await this.personagemEquipamentoService.create(
+      createPersonagemEquipamentoDto,
+    );
   }
 
-  @Get()
-  findAll() {
-    return this.personagemEquipamentoService.findAll();
+  @Get('personagem-equipamentos')
+  async findByQuery(
+    @Query(new ValidationPipe()) equipamentosQueryDto: EquipamentosQueryDto,
+  ) {
+    return await this.personagemEquipamentoService.findByQuery(
+      equipamentosQueryDto,
+    );
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.personagemEquipamentoService.findOne(+id);
+  @Get('personagem-equipamento/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.personagemEquipamentoService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePersonagemEquipamentoDto: UpdatePersonagemEquipamentoDto) {
-    return this.personagemEquipamentoService.update(+id, updatePersonagemEquipamentoDto);
+  @Patch('personagem-equipamento/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() updatePersonagemEquipamentoDto: UpdatePersonagemEquipamentoDto,
+  ) {
+    return await this.personagemEquipamentoService.update(
+      +id,
+      updatePersonagemEquipamentoDto,
+    );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.personagemEquipamentoService.remove(+id);
+  @Delete('personagem-equipamento/:id')
+  async remove(@Param('id') id: string) {
+    return await this.personagemEquipamentoService.remove(+id);
   }
 }

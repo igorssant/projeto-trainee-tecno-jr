@@ -1,26 +1,64 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePersonagemPoderDto } from './dto/create-personagem-poder.dto';
 import { UpdatePersonagemPoderDto } from './dto/update-personagem-poder.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PersonagemPoder } from './entities/personagem-poder.entity';
+import { Repository } from 'typeorm';
+import { PoderesQueryDto } from './dto/poderes-query.dto';
 
 @Injectable()
 export class PersonagemPoderService {
-  create(createPersonagemPoderDto: CreatePersonagemPoderDto) {
-    return 'This action adds a new personagemPoder';
+  constructor(
+    @InjectRepository(PersonagemPoder)
+    private personagemPoderRepository: Repository<PersonagemPoder>,
+  ) {}
+
+  async create(createPersonagemPoderDto: CreatePersonagemPoderDto) {
+    return await this.personagemPoderRepository.save(createPersonagemPoderDto);
   }
 
-  findAll() {
-    return `This action returns all personagemPoder`;
+  async findByQuery(poderesQueryDto: PoderesQueryDto) {
+    const { poderId, personagemId } = poderesQueryDto;
+
+    try {
+      let options: any = {};
+
+      if (poderId) {
+        options = { ...options, where: { poderId } };
+      }
+
+      if (personagemId) {
+        options = { ...options, where: { ...options.where, personagemId } };
+      }
+
+      return await this.personagemPoderRepository.find(options);
+    } catch (error) {
+      throw new NotFoundException('Falha ao retornar poderes.');
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} personagemPoder`;
+  async findOne(id: number) {
+    try {
+      return await this.personagemPoderRepository.findOneByOrFail({ id });
+    } catch (error) {
+      throw new NotFoundException('Relação Personagem-Poder não encontrada.');
+    }
   }
 
-  update(id: number, updatePersonagemPoderDto: UpdatePersonagemPoderDto) {
-    return `This action updates a #${id} personagemPoder`;
+  async update(id: number, updatePersonagemPoderDto: UpdatePersonagemPoderDto) {
+    // VERIFICA SE O PERSONAGEM REALMENTE TEM TAL PODER
+    // SE NÃO POSSUIR, ENTÃO O PROGRAMA ABORTA A EXECUÇÃO
+    await this.findOne(id);
+    return await this.personagemPoderRepository.update(
+      id,
+      updatePersonagemPoderDto,
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} personagemPoder`;
+  async remove(id: number) {
+    // VERIFICA SE O PERSONAGEM REALMENTE TEM TAL PODER
+    // SE NÃO POSSUIR, ENTÃO O PROGRAMA ABORTA A EXECUÇÃO
+    await this.findOne(id);
+    return await this.personagemPoderRepository.delete(id);
   }
 }

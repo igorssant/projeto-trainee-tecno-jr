@@ -1,34 +1,57 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  ValidationPipe,
+} from '@nestjs/common';
 import { PersonagemAtributoService } from './personagem-atributo.service';
 import { CreatePersonagemAtributoDto } from './dto/create-personagem-atributo.dto';
 import { UpdatePersonagemAtributoDto } from './dto/update-personagem-atributo.dto';
+import { AtributosQueryDto } from './dto/atributos-query.dto';
 
-@Controller('personagem-atributo')
+@Controller('api/personagem')
 export class PersonagemAtributoController {
-  constructor(private readonly personagemAtributoService: PersonagemAtributoService) {}
+  constructor(
+    private readonly personagemAtributoService: PersonagemAtributoService,
+  ) {}
 
-  @Post()
-  create(@Body() createPersonagemAtributoDto: CreatePersonagemAtributoDto) {
+  @Post('personagem-atributo')
+  async create(
+    @Body() createPersonagemAtributoDto: CreatePersonagemAtributoDto,
+  ) {
     return this.personagemAtributoService.create(createPersonagemAtributoDto);
   }
 
-  @Get()
-  findAll() {
-    return this.personagemAtributoService.findAll();
+  @Get('personagem-atributos')
+  async findByQuery(
+    @Query(new ValidationPipe()) atributoQueryDto: AtributosQueryDto,
+  ) {
+    return this.personagemAtributoService.findByQuery(atributoQueryDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get('personagem-atributo/:id')
+  async findOne(@Param('id') id: string) {
     return this.personagemAtributoService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePersonagemAtributoDto: UpdatePersonagemAtributoDto) {
-    return this.personagemAtributoService.update(+id, updatePersonagemAtributoDto);
+  @Patch('personagem-atributo/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() updatePersonagemAtributoDto: UpdatePersonagemAtributoDto,
+  ) {
+    return this.personagemAtributoService.update(
+      +id,
+      updatePersonagemAtributoDto,
+    );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('personagem-atributo/:id')
+  async remove(@Param('id') id: string) {
     return this.personagemAtributoService.remove(+id);
   }
 }

@@ -27,28 +27,27 @@ export class PersonagemArmaduraService {
     try {
       return await this.personagemArmaduraRepository.findOneByOrFail({ id });
     } catch (error) {
-      throw new NotFoundException('Relação Jogador-Armadura não encontrada.');
+      throw new NotFoundException(
+        'Relação Personagem-Armadura não encontrada.',
+      );
     }
   }
 
   async findByQuery(armadurasQueryDto: ArmadurasQueryDto) {
     const { armaduraId, personagemId } = armadurasQueryDto;
-    let query = this.personagemArmaduraRepository.createQueryBuilder('pa');
-
-    if (armaduraId) {
-      query = query.andWhere('pa.armaduraId = :armaduraId', {
-        armaduraId,
-      });
-    }
-
-    if (personagemId) {
-      query = query.andWhere('pa.personagemId = :personagemId', {
-        personagemId,
-      });
-    }
 
     try {
-      return await query.getMany();
+      let options: any = {};
+
+      if (armaduraId) {
+        options = { ...options, where: { armaduraId } };
+      }
+
+      if (personagemId) {
+        options = { ...options, where: { ...options.where, personagemId } };
+      }
+
+      return await this.personagemArmaduraRepository.find(options);
     } catch (error) {
       throw new NotFoundException('Falha ao retornar as armaduras.');
     }

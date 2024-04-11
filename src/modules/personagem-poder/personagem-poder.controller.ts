@@ -1,34 +1,55 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  ValidationPipe,
+} from '@nestjs/common';
 import { PersonagemPoderService } from './personagem-poder.service';
 import { CreatePersonagemPoderDto } from './dto/create-personagem-poder.dto';
 import { UpdatePersonagemPoderDto } from './dto/update-personagem-poder.dto';
+import { PoderesQueryDto } from './dto/poderes-query.dto';
 
-@Controller('personagem-poder')
+@Controller('api/personagem')
 export class PersonagemPoderController {
-  constructor(private readonly personagemPoderService: PersonagemPoderService) {}
+  constructor(
+    private readonly personagemPoderService: PersonagemPoderService,
+  ) {}
 
-  @Post()
-  create(@Body() createPersonagemPoderDto: CreatePersonagemPoderDto) {
-    return this.personagemPoderService.create(createPersonagemPoderDto);
+  @Post('personagem-poder')
+  async create(@Body() createPersonagemPoderDto: CreatePersonagemPoderDto) {
+    return await this.personagemPoderService.create(createPersonagemPoderDto);
   }
 
-  @Get()
-  findAll() {
-    return this.personagemPoderService.findAll();
+  @Get('personagem-poders')
+  async findByQuery(
+    @Query(new ValidationPipe()) poderesQueryDto: PoderesQueryDto,
+  ) {
+    return await this.personagemPoderService.findByQuery(poderesQueryDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.personagemPoderService.findOne(+id);
+  @Get('personagem-poder/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.personagemPoderService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePersonagemPoderDto: UpdatePersonagemPoderDto) {
-    return this.personagemPoderService.update(+id, updatePersonagemPoderDto);
+  @Patch('personagem-poder/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() updatePersonagemPoderDto: UpdatePersonagemPoderDto,
+  ) {
+    return await this.personagemPoderService.update(
+      +id,
+      updatePersonagemPoderDto,
+    );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.personagemPoderService.remove(+id);
+  @Delete('personagem-poder/:id')
+  async remove(@Param('id') id: string) {
+    return await this.personagemPoderService.remove(+id);
   }
 }

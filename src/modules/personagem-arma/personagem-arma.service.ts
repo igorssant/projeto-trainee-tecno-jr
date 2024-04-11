@@ -25,26 +25,25 @@ export class PersonagemArmaService {
     try {
       return await this.personagemArmaRepository.findOneByOrFail({ id });
     } catch (error) {
-      throw new NotFoundException('Relação Jogador-Arma não encontrada.');
+      throw new NotFoundException('Relação Personagem-Arma não encontrada.');
     }
   }
 
   async findByQuery(armasQueryDto: ArmasQueryDto) {
     const { armaId, personagemId } = armasQueryDto;
-    let query = this.personagemArmaRepository.createQueryBuilder('pa');
-
-    if (armaId) {
-      query = query.andWhere('pa.armaId = :armaId', { armaId });
-    }
-
-    if (personagemId) {
-      query = query.andWhere('pa.personagemId = :personagemId', {
-        personagemId,
-      });
-    }
 
     try {
-      return await query.getMany();
+      let options: any = {};
+
+      if (armaId) {
+        options = { ...options, where: { armaId } };
+      }
+
+      if (personagemId) {
+        options = { ...options, where: { ...options.where, personagemId } };
+      }
+
+      return await this.personagemArmaRepository.find(options);
     } catch (error) {
       throw new NotFoundException('Falha ao retornar as armas.');
     }
