@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JogadorModule } from './modules/jogador/jogador.module';
 import { PersonagemModule } from './modules/personagem/personagem.module';
 import { AtributoModule } from './modules/atributo/atributo.module';
@@ -27,7 +27,9 @@ import { databaseConfig } from 'config/database.config';
       envFilePath: '.env',
     }),
     TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
       useFactory: () => databaseConfig,
+      inject: [ConfigService],
     }),
     JogadorModule,
     PersonagemModule,
