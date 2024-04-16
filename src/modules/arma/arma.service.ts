@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateArmaDto } from './dto/create-arma.dto';
 import { UpdateArmaDto } from './dto/update-arma.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,7 +19,7 @@ export class ArmaService {
   async create(createArmaDto: CreateArmaDto) {
     // VERIFICA SE A ARMA JÁ EXISTE
     // SE JÁ EXISTIR NÃO SERÁ CADASTRADA NOVAMENTE
-    await this.findByNome(createArmaDto.nome);
+    await this.armaExisteNoBanco(createArmaDto.nome);
     return await this.armaRepository.save(createArmaDto);
   }
 
@@ -47,5 +51,15 @@ export class ArmaService {
       where: { nome },
       select: ['id', 'nome', 'descricao', 'dano', 'preco'],
     });
+  }
+
+  async armaExisteNoBanco(nome: string) {
+    const arma = await this.armaRepository.findOne({
+      where: { nome },
+    });
+
+    if (arma) {
+      throw new BadRequestException('Esta arma já foi cadastrada.');
+    }
   }
 }
