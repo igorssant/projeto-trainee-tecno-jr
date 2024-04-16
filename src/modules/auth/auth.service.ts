@@ -12,7 +12,9 @@ export class AuthService {
   ) {}
 
   async login(loginDto: LoginDto) {
-    const jogador = await this.jogadorService.findByNome(loginDto.nome);
+    const jogador = await this.jogadorService.findAndReturnByNome(
+      loginDto.nome,
+    );
 
     if (jogador) {
       if (await bcrypt.compare(loginDto.senha, jogador.senha)) {

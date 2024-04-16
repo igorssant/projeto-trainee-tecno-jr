@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateMagiaDto } from './dto/create-magia.dto';
 import { UpdateMagiaDto } from './dto/update-magia.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,7 +19,7 @@ export class MagiaService {
   async create(createMagiaDto: CreateMagiaDto) {
     // VERIFICA SE A MAGIA JÁ EXISTE
     // SÓ SALVA SE NÃO EXISTIR
-    await this.findByNome(createMagiaDto.nome);
+    await this.magiaJaExisteNoBanco(createMagiaDto.nome);
     return await this.magiaRepository.save(createMagiaDto);
   }
 
@@ -50,5 +54,15 @@ export class MagiaService {
       where: { nome },
       select: ['nome', 'efeito', 'alvo', 'duracao'],
     });
+  }
+
+  async magiaJaExisteNoBanco(nome: string) {
+    const magia = await this.magiaRepository.findOne({
+      where: { nome },
+    });
+
+    if (magia) {
+      throw new BadRequestException('Essa magia já foi cadastrada.');
+    }
   }
 }

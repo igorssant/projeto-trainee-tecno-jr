@@ -23,7 +23,7 @@ export class PoderController {
     return await this.poderService.create(createPoderDto);
   }
 
-  @Get('poders')
+  @Get('poderes')
   async findAll() {
     return await this.poderService.findAll();
   }

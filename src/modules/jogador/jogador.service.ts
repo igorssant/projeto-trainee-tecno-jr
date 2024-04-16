@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateJogadorDto } from './dto/create-jogador.dto';
 import { UpdateJogadorDto } from './dto/update-jogador.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -63,9 +67,19 @@ export class JogadorService {
   }
 
   async findByNome(nome: string) {
+    const user = await this.jogadorRepository.findOne({
+      where: { nome },
+    });
+
+    if (user) {
+      throw new BadRequestException('Um Jogador com este nome já existe.');
+    }
+  }
+
+  async findAndReturnByNome(nome: string) {
     return await this.jogadorRepository.findOneOrFail({
       where: { nome },
-      select: ['nome', 'personagem', 'mestre'],
+      select: ['nome', 'senha'],
     });
   }
 }

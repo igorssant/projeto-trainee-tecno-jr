@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePersonagemDto } from './dto/create-personagem.dto';
 import { UpdatePersonagemDto } from './dto/update-personagem.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,8 +19,15 @@ export class PersonagemService {
   async create(createPersonagemDto: CreatePersonagemDto) {
     // VERIFICA SE O PERSONAGEM JÁ EXISTE
     // SE EXISTIR, ABORTA A EXECUÇÃO
-    await this.findByNome(createPersonagemDto.nome);
-    return await this.personagemRepository.save(createPersonagemDto);
+    await this.personagemJaExisteNoBanco(createPersonagemDto.nome);
+
+    if (createPersonagemDto.jogadorId) {
+      return await this.personagemRepository.save(createPersonagemDto);
+    } else {
+      throw new BadRequestException(
+        'Não é possível criar um personagem sem atribuí-lo a um jogador.',
+      );
+    }
   }
 
   async findAll() {
@@ -50,5 +61,15 @@ export class PersonagemService {
       where: { nome },
       select: ['nome', 'classe', 'origem', 'deus'],
     });
+  }
+
+  async personagemJaExisteNoBanco(nome: string) {
+    const personagem = await this.personagemRepository.findOne({
+      where: { nome },
+    });
+
+    if (personagem) {
+      throw new BadRequestException('Um Personagem com este nome já existe.');
+    }
   }
 }

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePoderDto } from './dto/create-poder.dto';
 import { UpdatePoderDto } from './dto/update-poder.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,7 +19,7 @@ export class PoderService {
   async create(createPoderDto: CreatePoderDto) {
     // VERIFICA SE PODER JÁ EXISTE
     // SE JÁ EXISTIR, ABORTA A EXECUÇÃO
-    await this.findByNome(createPoderDto.nome);
+    await this.poderJaExisteNoBanco(createPoderDto.nome);
     return await this.poderRepository.save(createPoderDto);
   }
 
@@ -50,5 +54,17 @@ export class PoderService {
       where: { nome },
       select: ['id', 'nome', 'custo', 'efeito', 'alvo', 'duracao'],
     });
+  }
+
+  async poderJaExisteNoBanco(nome: string) {
+    const poder = await this.poderRepository.findOne({
+      where: { nome },
+    });
+
+    if (poder) {
+      throw new BadRequestException(
+        'Esse poder já foi cadastrado anteriormente',
+      );
+    }
   }
 }

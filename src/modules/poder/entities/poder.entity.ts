@@ -29,7 +29,7 @@ export class Poder {
     type: 'varchar',
     length: 50,
     nullable: false,
-    default: 'Instantaneo',
+    default: 'Instantâneo',
   })
   duracao: string;
 
