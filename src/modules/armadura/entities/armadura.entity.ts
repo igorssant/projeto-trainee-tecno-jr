@@ -12,10 +12,20 @@ export class Armadura {
   @Column({ name: 'armor_descricao', type: 'text', nullable: false })
   descricao: string;
 
-  @Column({ name: 'armor_preco', type: 'int', nullable: false, default: 1 })
+  @Column({
+    name: 'armor_classe_armadura',
+    type: 'int',
+    nullable: false,
+    default: 1,
+  })
   bonusClasseDeArmadura: number;
 
-  @Column({ name: 'armor_preco', type: 'int', nullable: false, default: 0 })
+  @Column({
+    name: 'armor_penalidade',
+    type: 'int',
+    nullable: false,
+    default: 0,
+  })
   penalidadePorArmadura: number;
 
   @Column({ name: 'armor_preco', type: 'int', nullable: false })

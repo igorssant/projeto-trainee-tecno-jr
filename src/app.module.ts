@@ -28,7 +28,7 @@ import { databaseConfig } from 'config/database.config';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: () => databaseConfig,
+      useFactory: async () => databaseConfig,
       inject: [ConfigService],
     }),
     JogadorModule,
