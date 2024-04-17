@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   Query,
-  ValidationPipe,
   UseGuards,
 } from '@nestjs/common';
 import { PersonagemMagiaService } from './personagem-magia.service';
@@ -29,9 +28,7 @@ export class PersonagemMagiaController {
   }
 
   @Get('personagem-magias')
-  async findByQuery(
-    @Query(new ValidationPipe()) magiasQueryDto: MagiasQueryDto,
-  ) {
+  async findByQuery(@Query() magiasQueryDto: MagiasQueryDto) {
     return await this.personagemMagiaService.findByQuery(magiasQueryDto);
   }
 
